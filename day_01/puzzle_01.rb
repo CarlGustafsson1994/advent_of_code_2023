@@ -1,0 +1,1 @@
+File.open("./input.txt").each_line.sum { |line| line.scan(/\d/).values_at(0, -1).join.to_i }.tap { |sum| puts sum }
