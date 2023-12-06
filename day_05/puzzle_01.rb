@@ -1,6 +1,3 @@
-require "byebug"
-require "prettyprint"
-
 current_location = nil
 location_range = Hash.new
 lowest_number_found = Float::INFINITY
@@ -22,15 +19,11 @@ File.readlines("./input.txt").each_with_index do |line, index|
 end
 
 seeds.each do |seed|
-    mapped_source_number = seed
-    location_range.each_with_index do |(location, ranges), index|
-        source, destination = location.split("-to-")
-        combined_ranges = ranges.find { |range_hash| range_hash["source_range"].include?(mapped_source_number) }
-        unless combined_ranges.nil?
-            mapped_source_number_index = combined_ranges["source_range"].find_index(mapped_source_number)
-            mapped_source_number = combined_ranges["destination_range"].begin + mapped_source_number_index
-        end
+    source = seed
+    location_range.each do |_location, ranges|
+        combined_ranges = ranges.find { |range_hash| range_hash["source_range"].include?(source) }
+        source = combined_ranges["destination_range"].begin + (combined_ranges["source_range"].begin - source).abs unless combined_ranges.nil?
     end
-    lowest_number_found = mapped_source_number if mapped_source_number < lowest_number_found
+    lowest_number_found = source if source < lowest_number_found
 end
 puts lowest_number_found
