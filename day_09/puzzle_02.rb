@@ -1,5 +1,5 @@
 calculate_next_number = ->(acc, series) do
-    if series.all? { |n| n == 0 }
+    if series.all?(&:zero?)
         acc << series.each_cons(2).map { |a, b| b - a }
     else
         calculate_next_number.call(acc << series, series.each_cons(2).map { |a, b| b - a })
@@ -13,12 +13,8 @@ p -> do
         result = calculate_next_number.call([], starting_series)
         current_addition = 0
         (result.compact << [0]).reverse.each_cons(2) do |a, b|
-            if b.empty?
-                b << 0
-            else
-                result[result.index(b)] << a.last + b.last
-            end
+            result[result.index(b)].unshift(b.first - a.first)
         end
-        result[0][-1]
+        result[0][0]
     end
 end.call
