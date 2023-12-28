@@ -32,17 +32,15 @@ path << {
     row: starting_point[:row],
     symbol: matrix[starting_point[:column] -1][starting_point[:row]]
 }
-current_point = path.last
 
 # Hard coded start direction
 direction = "N"
 
 loop do
     begin
-        next_point = find_next_point.call(current_point, direction)
+        next_point = find_next_point.call(path[-1], direction)
         direction = next_point[:direction]
         path << next_point.slice(:column, :row, :symbol)
-        current_point = path.last
     rescue EndOfPathError
         puts path.length / 2
         break
